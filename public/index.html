@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Rosario Central - Gestión de Socios</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>API Rosario Central</h1>
+            <p>Gestión de Socios y Control de Acceso</p>
+        </header>
+
+        <main>
+            <!-- Access Control Section -->
+            <section id="access-section"
+                style="background: linear-gradient(135deg, #003399 0%, #0055cc 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h2 style="color: #fabd00; text-align: center; margin-bottom: 1.5rem;">🏟️ Control de Acceso - Estadio
+                    Gigante de Arroyito</h2>
+
+                <div class="form-container"
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 8px;">
+                    <div class="access-search-container">
+                        <input type="text" id="access-socio-id" placeholder="Ingrese ID del Socio">
+                        <button onclick="checkAccessDetailed()">VERIFICAR</button>
+                    </div>
+
+                    <!-- Result Card -->
+                    <div id="access-result-card"
+                        style="display: none; background: white; color: #333; padding: 2rem; border-radius: 8px; margin-top: 1rem;">
+                        <!-- Socio Info -->
+                        <div id="socio-info"
+                            style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                            <img id="socio-photo" src="" alt="Foto"
+                                style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #003399;">
+                            <div>
+                                <h3 id="socio-name" style="margin: 0; color: #003399;"></h3>
+                                <p id="socio-details" style="margin: 0.25rem 0 0 0; color: #666; font-size: 0.9em;"></p>
+                            </div>
+                        </div>
+
+                        <!-- Status Banner -->
+                        <div id="status-banner"
+                            style="padding: 1.5rem; border-radius: 8px; text-align: center; font-size: 1.5em; font-weight: bold; margin-bottom: 1.5rem;">
+                            <!-- Will be populated dynamically -->
+                        </div>
+
+                        <!-- Checklist -->
+                        <div id="status-checklist" style="display: grid; gap: 0.75rem;">
+                            <div id="check-carnet"
+                                style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: #f5f5f5; border-radius: 4px;">
+                                <span class="check-icon" style="font-size: 1.5em;"></span>
+                                <div>
+                                    <strong>Carnet de Socio:</strong>
+                                    <span class="check-status"></span>
+                                </div>
+                            </div>
+                            <div id="check-cuotas"
+                                style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: #f5f5f5; border-radius: 4px;">
+                                <span class="check-icon" style="font-size: 1.5em;"></span>
+                                <div>
+                                    <strong>Cuotas (Últimas 3):</strong>
+                                    <span class="check-status"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Socios Section -->
+            <section id="socios-section" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>Socios (Jugadores / CT)</h2>
+                    <button onclick="exportSocios()"
+                        style="background: #28a745; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: bold;">📥
+                        Exportar a CSV</button>
+                </div>
+                <div class="form-container">
+                    <h3>Nuevo Socio</h3>
+                    <form id="socio-form">
+                        <input type="text" id="socio-name" placeholder="Nombre Completo" required>
+                        <input type="email" id="socio-email" placeholder="Email" required>
+                        <input type="text" id="socio-dni" placeholder="DNI" required>
+                        <input type="text" id="socio-phone" placeholder="Teléfono">
+                        <input type="text" id="socio-role" placeholder="Rol (Ej: Jugador, DT, Hincha)">
+                        <input type="text" id="socio-photo" placeholder="URL Foto (Opcional)">
+                        <button type="submit">Asociar</button>
+                    </form>
+                </div>
+                <div class="list-container">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Listado de Socios Históricos y Actuales</h3>
+                        <div class="search-container" style="display: flex; gap: 5px;">
+                            <input type="text" id="socio-search" placeholder="🔍 Buscar por nombre, DNI o ID..."
+                                style="padding: 0.5rem; border-radius: 4px; border: 1px solid #003399; width: 250px;">
+                        </div>
+                    </div>
+
+                    <ul id="socios-list">
+                        <!-- Socios will be loaded here -->
+                    </ul>
+
+                    <div id="pagination-controls"
+                        style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                        <button id="prev-page" onclick="prevPage()"
+                            style="background: #003399; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Anterior</button>
+                        <span id="page-info" style="font-weight: bold; color: #003399;">Página 1 de 1</span>
+                        <button id="next-page" onclick="nextPage()"
+                            style="background: #003399; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Siguiente</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Access Logs Section -->
+            <section id="logs-section"
+                style="background: #f8f9fa; padding: 2rem; border-radius: 12px; border: 1px solid #ddd;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="margin: 0; color: #003399;">📋 Auditoría de Accesos</h2>
+                    <button onclick="fetchLogs(1)"
+                        style="background: #003399; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Actualizar Logs</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; background: white;">
+                        <thead>
+                            <tr style="background: #003399; color: white; text-align: left;">
+                                <th style="padding: 12px; border: 1px solid #ddd;">Fecha/Hora</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Socio</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Estado</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Resultado</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Verificado por</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-table-body">
+                            <!-- Logs will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="logs-pagination" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 1rem;">
+                    <button id="logs-prev" onclick="prevLogsPage()" style="background: #003399; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Anterior</button>
+                    <span id="logs-page-info" style="font-weight: bold; color: #003399;">Página 1 de 1</span>
+                    <button id="logs-next" onclick="nextLogsPage()" style="background: #003399; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Siguiente</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <button onclick="logout()"
+        style="position: fixed; top: 20px; right: 20px; background: #d9534f; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Cerrar
+        Sesión</button>
+    <!-- QR Modal -->
+    <div id="qr-modal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div
+            style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px; width: 90%;">
+            <h2 style="color: #003399; margin-bottom: 1rem;">Carnet Digital</h2>
+            <img id="qr-image" src="" alt="QR"
+                style="width: 250px; height: 250px; margin-bottom: 1rem; border: 1px solid #ddd;">
+            <p id="qr-socio-name" style="font-weight: bold; margin-bottom: 0.5rem;"></p>
+            <button onclick="closeQR()"
+                style="background: #003399; color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">CERRAR</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
