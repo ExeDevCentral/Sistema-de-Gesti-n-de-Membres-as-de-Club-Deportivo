@@ -122,3 +122,69 @@ li:last-child {
 .delete-btn:hover {
     background-color: #c0392b;
 }
+/* Mobile & Tablet Responsiveness */
+.access-search-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.access-search-container input {
+    flex: 1;
+    min-width: 200px;
+    min-height: 48px;
+    font-size: 1rem;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.access-search-container button {
+    min-height: 48px;
+    padding: 0 24px;
+    background: #fabd00;
+    color: #003399;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 12px 10px;
+        max-width: 100%;
+    }
+    header {
+        padding: 16px 12px;
+    }
+    header h1 {
+        font-size: 1.5rem;
+    }
+    #access-section {
+        padding: 1.25rem !important;
+    }
+    .access-search-container {
+        flex-direction: column;
+    }
+    .access-search-container input,
+    .access-search-container button {
+        width: 100%;
+    }
+    #socio-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
+    button, input, select {
+        min-height: 44px;
+        font-size: 16px;
+    }
+}
