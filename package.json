@@ -1,7 +1,7 @@
 {
   "name": "api-turnos",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistema de gestión de membresías para club deportivo.",
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
@@ -32,5 +32,10 @@
     "jest": "^29.7.0",
     "nodemon": "^3.1.11",
     "supertest": "^7.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExeDevCentral/Sistema-de-Gesti-n-de-Membres-as-de-Club-Deportivo.git"
+  },
+  "homepage": "https://github.com/ExeDevCentral/Sistema-de-Gesti-n-de-Membres-as-de-Club-Deportivo"
 }
